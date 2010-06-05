@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+
+<title>Project ARASHI</title>
+<link rel=stylesheet media=screen href="stylesheet.css">
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js"></script>
+<script src="src/globals.js"></script>
+<script src="src/engine.js"></script>
+<script src="src/random.js"></script>
+<script src="src/soundkit.js"></script>
+<script src="src/grid.js"></script>
+<script src="src/vakit/7segment.js"></script>
+<script src="src/vakit/14segment.js"></script>
+<script src="src/vakit/starfield.js"></script>
+<script src="src/vakit/sizzling.js"></script>
+<script src="src/vakit/logo.js"></script>
+<script src="src/vakit/lightning.js"></script>
+<script src="src/gamestates/test.js"></script>
+<script src="src/gamestates/title.js"></script>
+<script src="src/gamestates/game.js"></script>
+
+<script>
+$(document).ready(function () {
+  $('#d').show();
+  $('#s a').focus();
+});
+function start() {
+  $('#d').hide();
+  Engine.start();
+}
+</script>
+
+</head>
+<body>
+
+<audio src="snd/blast.wav" autobuffer></audio>
+<audio src="snd/blow.wav" autobuffer></audio>
+<audio src="snd/bonk.wav" autobuffer></audio>
+<audio src="snd/dziuung.wav" autobuffer></audio>
+<audio src="snd/fadeinphazer.wav" autobuffer></audio>
+<audio src="snd/fadeoutphazer.wav" autobuffer></audio>
+<audio src="snd/fallyell.wav" autobuffer></audio>
+<audio src="snd/fallzap.wav" autobuffer></audio>
+<audio src="snd/flythru.wav" autobuffer></audio>
+<audio src="snd/phazer.wav" autobuffer></audio>
+<audio src="snd/splitter.wav" autobuffer></audio>
+<audio src="snd/springy.wav" autobuffer></audio>
+<audio src="snd/swish.wav" autobuffer></audio>
+<audio src="snd/swoosh.wav" autobuffer></audio>
+<audio src="snd/tadaum.wav" autobuffer></audio>
+<audio src="snd/whiz.wav" autobuffer></audio>
+<audio src="snd/zrooming.wav" autobuffer></audio>
+<audio src="snd/zzfreelife.wav" autobuffer></audio>
+<audio src="snd/zzsuperzap.wav" autobuffer></audio>
+
+<div id="h"></div>
+<div id="v"></div>
+<div id="c"><canvas id="game" width="800" height="600"></canvas></div>
+
+<div id="d" style="display: none">
+<p>
+  <strong>Heads-up:</strong> this page contains multimedia content;<br>
+  adjust your speaker volume!
+</p>
+<p>
+  Compatibility is limited. Best chances with Firefox 3.5+.<br>
+  Audio may be problematic on certain systems/browsers.
+</p>
+<p id="s">
+  <a href="javascript:start()">Continue</a>
+</p>
+</div>
+
+</body>
+</html>

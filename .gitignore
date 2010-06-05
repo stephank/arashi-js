@@ -1,0 +1,6 @@
+*.lint.js
+*.pyc
+*.pyo
+dist/arashi.js
+dist/arashi.css
+
