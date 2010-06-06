@@ -5,8 +5,13 @@ JAVA ?= java
 YUICOMP ?= ../yuicompressor.jar
 HTMLCOMP ?= ../htmlcompressor.jar
 
+OGGENC ?= oggenc
+
 
 JSFILES := $(shell find src -iname '*.js' | grep -v '.lint.js')
+WAVFILES := $(shell find snd -iname '*.wav')
+OGGFILES := $(WAVFILES:%.wav=%.ogg)
+DISTSOUNDS := $(WAVFILES:snd/%=dist/snd/%) $(OGGFILES:snd/%=dist/snd/%)
 
 usage:
 	@echo "The following make targets are defined:"
@@ -14,10 +19,10 @@ usage:
 	@echo "  lint: Run JSLint on all JavaScript source files."
 	@echo "  clean: Remove any files created by the above."
 
-dist: dist/arashi.html dist/arashi.js dist/arashi.css
+dist: dist/arashi.html dist/arashi.js dist/arashi.css ${DISTSOUNDS}
 
 clean:
-	-rm -f dist/arashi.html dist/arashi.js dist/arashi.css
+	-rm -f dist/arashi.html dist/arashi.js dist/arashi.css ${DISTSOUNDS}
 	-find src -iname '*.lint.js' | xargs rm -f
 
 lint:
@@ -45,5 +50,11 @@ dist/arashi.js: ${JSFILES}
 
 dist/arashi.css: arashi.css
 	${JAVA} -jar ${YUICOMP} --type css -o dist/arashi.css arashi.css
+
+dist/snd/%.wav: snd/%.wav
+	cp $< $@
+
+dist/snd/%.ogg: dist/snd/%.wav
+	${OGGENC} -o $@ -Q $<
 
 .PHONY: usage dist clean lint
