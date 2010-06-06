@@ -29,7 +29,7 @@ lint:
 	  echo; \
 	done
 
-dist/arashi.html:
+dist/arashi.html: arashi.html
 	sed arashi.html \
 	    -e '/script src="src\//d' \
 	    -e 's/<\/head>/<script src="arashi.js"><\/script><\/head>/' \
@@ -38,12 +38,12 @@ dist/arashi.html:
 	    --remove-intertag-spaces --remove-quotes \
 	  > dist/arashi.html
 
-dist/arashi.js:
+dist/arashi.js: ${JSFILES}
 	cat util/dist.head.js ${JSFILES} \
 	  | ${JAVA} -jar ${YUICOMP} --type js \
 	  > dist/arashi.js
 
-dist/arashi.css:
+dist/arashi.css: arashi.css
 	${JAVA} -jar ${YUICOMP} --type css -o dist/arashi.css arashi.css
 
 .PHONY: usage dist clean lint
