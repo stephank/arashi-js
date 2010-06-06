@@ -13,8 +13,7 @@ To launch, simply open `arashi.html` in a browser.
 
 ## License
 
-No license disclaimer was attached to Project ARASHI. I'm considering the GNU GPL v2 a safe bet
-while I contact the authors. A copy of the license is attached in the COPYING file.
+ArashiJS is licensed GNU GPL version 2. See the COPYING file for details.
 
 ## Directory structure
 
@@ -33,7 +32,7 @@ underneath `src/gamestates/`.
 All other files are basically utilities for getting things done:
 
 * The `src/vakit/` directory contains drawing utilities (which stem from the `VAKit` library in the
-original Project ARASHI). 
+original Project ARASHI).
 
 * The `src/soundkit.js` library is a minimal abstraction for playing sound effects.
 
