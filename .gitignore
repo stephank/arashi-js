@@ -3,4 +3,5 @@
 *.pyo
 dist/arashi.js
 dist/arashi.css
+dist/arashi.html
 
