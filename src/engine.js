@@ -22,9 +22,6 @@ Engine.start = function() {
     frame.mouseY = e.pageY - canvas.offsetTop;
   });
 
-  // Init sound kit
-  Snd.init();
-
   // All systems, go!
   this.resume();
   this.startMachine(TitleMachine);

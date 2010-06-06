@@ -4,23 +4,64 @@
 // For each sample, a helper method is created in +Snd+, named after the file's basename.
 // So for example, 'snd/blast.wav' can be played using 'Snd.blast()'.
 
-var Snd = {};
+// This construct is so we can have a local inner function
+var Snd = (function() {
+  var retval = {};
 
-Snd.init = function() {
-  // Iterate all <audio> elements
-  $('audio').each(function() {
-    var src = this.getAttribute('src');
-    // Filter by elements in the 'snd' directory
-    if (src.substring(0, 4) !== "snd/") { return; }
-    // Cut out the basename (strip directory and extension)
-    var name = src.substring(4, src.length - 4);
-    // Create the helper function
-    Snd[name] = function() { return Snd.play(src); };
-  });
-};
+  // Let's see what kind of audio support we have.
+  var dummyAudio = $('<audio></audio>')[0],
+      extension = 'none';
+  if (dummyAudio.canPlayType) {
+    if (dummyAudio.canPlayType('audio/ogg; codecs="vorbis"') !== 'no') {
+      extension = 'ogg';
+    }
+    else {
+      extension = 'wav';
+    }
+  }
 
-Snd.play = function(src) {
-  var element = new Audio(src);
-  element.play();
-  return element;
-};
+  // Inner function for preloading sounds.
+  var cache = {};
+  var load = function(name) {
+    if (extension === 'none') {
+      // Create a dummy and be done with it.
+      retval[name] = function() {};
+    }
+    else {
+      var src = 'snd/' + name + '.' + extension;
+      // Preload the audio file
+      cache[name] = new Audio(src);
+      cache[name].load();
+      // Create the helper function
+      retval[name] = function() {
+        // FIXME: this causes a new request for every sound effect in Chrome.
+        // Works peachy in Firefox, though. How to prevent?
+        var element = new Audio(src);
+        element.play();
+        return element;
+      };
+    }
+  };
+
+  load('blast');
+  load('blow');
+  load('bonk');
+  load('dziuung');
+  load('fadeinphazer');
+  load('fadeoutphazer');
+  load('fallyell');
+  load('fallzap');
+  load('flythru');
+  load('phazer');
+  load('splitter');
+  load('springy');
+  load('swish');
+  load('swoosh');
+  load('tadaum');
+  load('whiz');
+  load('zrooming');
+  load('zzfreelife');
+  load('zzsuperzap');
+
+  return retval;
+}());
