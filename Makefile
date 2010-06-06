@@ -38,6 +38,7 @@ dist/arashi.html: arashi.html
 	sed arashi.html \
 	    -e '/script src="src\//d' \
 	    -e 's/<\/head>/<script src="arashi.js"><\/script><\/head>/' \
+	    -e 's/jquery\.js/jquery.min.js/' \
 	  | ${JAVA} -jar ${HTMLCOMP} \
 	    --compress-js --compress-css \
 	    --remove-intertag-spaces --remove-quotes \
