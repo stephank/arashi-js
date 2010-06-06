@@ -82,10 +82,10 @@ Grid.prototype.draw = function() {
   // Pretty simply, this 'pulls stuff away' from the point of convergence.
   var frontDepthFactor = C.startDepth / (C.startDepth + this.distance),
       backDepthFactor = C.startDepth / (C.endDepth + this.distance),
-      scoords = [], i;
+      scoords = [], i, corner;
   scoords[this.coords.length - 1] = null; // initialize array size
   for (i = 0; i < this.coords.length; i++) {
-    var corner = this.coords[i];
+    corner = this.coords[i];
     scoords[i] = {
       sx: (corner[0] - this.twist[0]) * frontDepthFactor,
       sy: (corner[1] - this.twist[1]) * frontDepthFactor,
@@ -116,11 +116,11 @@ Grid.prototype.draw = function() {
   c.beginPath();
   c.moveTo(scoords[0].sx, scoords[0].sy);
   for (i = 1; i < scoords.length; i++) {
-    var corner = scoords[i];
+    corner = scoords[i];
     c.lineTo(corner.sx, corner.sy);
   }
   for (i -= 1; i >= 0; i -= 1) {
-    var corner = scoords[i];
+    corner = scoords[i];
     c.lineTo(corner.ex, corner.ey);
   }
   c.closePath();
@@ -132,21 +132,21 @@ Grid.prototype.draw = function() {
   c.beginPath();
   // Draw lanes
   for (i = 0; i < scoords.length; i++) {
-    var corner = scoords[i];
+    corner = scoords[i];
     c.moveTo(corner.sx, corner.sy);
     c.lineTo(corner.ex, corner.ey);
   }
   // Draw front edge
   c.moveTo(scoords[0].sx, scoords[0].sy);
   for (i = 1; i < scoords.length; i++) {
-    var corner = scoords[i];
+    corner = scoords[i];
     if (corner.close) { c.closePath(); break; }
     c.lineTo(corner.sx, corner.sy);
   }
   // Draw back edge
   c.moveTo(scoords[0].ex, scoords[0].ey);
   for (i = 1; i < scoords.length; i++) {
-    var corner = scoords[i];
+    corner = scoords[i];
     if (corner.close) { c.closePath(); break; }
     c.lineTo(corner.ex, corner.ey);
   }
