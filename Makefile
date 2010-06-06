@@ -44,7 +44,7 @@ dist/arashi.html: arashi.html
 	    --remove-intertag-spaces --remove-quotes \
 	  > dist/arashi.html
 
-dist/arashi.js: ${JSFILES}
+dist/arashi.js: ${JSFILES} util/dist.head.js
 	cat util/dist.head.js ${JSFILES} \
 	  | ${JAVA} -jar ${YUICOMP} --type js \
 	  > dist/arashi.js
