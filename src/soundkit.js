@@ -12,7 +12,8 @@ var Snd = (function() {
   var dummyAudio = $('<audio></audio>')[0],
       extension = 'none';
   if (dummyAudio.canPlayType) {
-    if (dummyAudio.canPlayType('audio/ogg; codecs="vorbis"') !== 'no') {
+    if (!window.arashi_devmode &&
+        dummyAudio.canPlayType('audio/ogg; codecs="vorbis"') !== 'no') {
       extension = 'ogg';
     }
     else {

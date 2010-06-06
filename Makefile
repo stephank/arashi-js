@@ -39,6 +39,7 @@ dist/arashi.html: arashi.html
 	    -e '/script src="src\//d' \
 	    -e 's/<\/head>/<script src="arashi.js"><\/script><\/head>/' \
 	    -e 's/jquery\.js/jquery.min.js/' \
+	    -e '/arashi_devmode/d' \
 	  | ${JAVA} -jar ${HTMLCOMP} \
 	    --compress-js --compress-css \
 	    --remove-intertag-spaces --remove-quotes \

@@ -1,7 +1,6 @@
 Engine = {
   machine: null,
-  state: null,
-  showFps: false
+  state: null
 };
 
 Engine.start = function() {
@@ -99,7 +98,7 @@ Engine.render = function() {
   }
 
   // Draw frame render time in ms
-  if (this.showFps) {
+  if (window.arashi_devmode) {
     var d = new Date() - s;
     c.beginPath();
       c.save();
