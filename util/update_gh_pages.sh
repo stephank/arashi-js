@@ -20,11 +20,14 @@ REVISION=`git rev-parse HEAD`
 
 make dist
 (
-  cd dist && \
-  tar -cf ${TEMPTAR} * && \
+  set -e
+  cd dist
   mv arashi.html index.html
+  find . -iname 'placeholder' | xargs rm -f
+  tar -cf ${TEMPTAR} *
 )
 
+git reset --hard
 git clean -fdx
 git checkout gh-pages
 
