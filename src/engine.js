@@ -3,7 +3,7 @@ Engine = {
   state: null
 };
 
-Engine.start = function() {
+Engine.start = function(initialMachine) {
   var canvas = $('#game')[0];
 
   // Globals
@@ -21,9 +21,13 @@ Engine.start = function() {
     frame.mouseY = e.pageY - canvas.offsetTop;
   });
 
+  // Allow a different starting machine in development
+  if (!initialMachine)
+    initialMachine = TitleMachine;
+
   // All systems, go!
   this.resume();
-  this.startMachine(TitleMachine);
+  this.startMachine(initialMachine);
 };
 
 // Start a game state machine

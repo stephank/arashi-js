@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+<head>
+
+<!--
+Copy me to testing.html!
+
+This file is a template for a testing page. This template itself is in version control, which is
+nice. If you copy this page as testing.html, you'll notice that testing.html is ignored by
+version control, which is even nicer. It's for messing around while developing.
+
+This page is functionally much like arashi.html, but contains lots of commentary.
+-->
+
+<title>ArashiJS</title>
+
+<link rel=stylesheet media=screen href="arashi.css">
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js"></script>
+
+<!--
+Development mode will currently change the following:
+ * Force the use of WAVs, rather than OGGs. This is because OGGs are a build product.
+   Note that Google Chrome is unfortunately incapable of playing WAVs. (Chromium issue #23916)
+ * Draw a framerate counter. The counter does not update while the engine is paused,
+   (where it should actually show zero, or such).
+-->
+<script>window.arashi_devmode = true;</script>
+
+<!-- It is important for globals to be import first. -->
+<script src="src/globals.js"></script>
+
+<!-- Source files -->
+<script src="src/engine.js"></script>
+<script src="src/random.js"></script>
+<script src="src/soundkit.js"></script>
+<script src="src/grid.js"></script>
+<script src="src/vakit/7segment.js"></script>
+<script src="src/vakit/14segment.js"></script>
+<script src="src/vakit/starfield.js"></script>
+<script src="src/vakit/sizzling.js"></script>
+<script src="src/vakit/logo.js"></script>
+<script src="src/vakit/lightning.js"></script>
+<script src="src/gamestates/title.js"></script>
+<script src="src/gamestates/game.js"></script>
+
+<!-- Bootstrap code -->
+<script>
+// Show the dialog after page load.
+// Technically, sounds may still be loading at this point. Assume it won't take long now.
+$(document).ready(function () {
+  $('#d').show();
+  $('#s a').focus();
+});
+// Run the game.
+function start() {
+  $('#d').hide();
+
+  // Typical way to start the game.
+  // Engine.start();
+
+  // But #start also takes a gamestate-like object. Handy for testing.
+  Engine.start(TestMachine);
+}
+</script>
+
+<!-- Here's an example gamestate-like object, which just draws some silly text. -->
+<script>
+var TestMachine = {
+  enter_start: function() {
+    c.beginPath();
+      c.save();
+        c.translate(225, 260);
+        c.scale(20, 20);
+        Dig14Segment.drawText('TEST');
+        c.translate(12, 2);
+        c.scale(0.5, 0.5);
+        Dig14Segment.drawText('ICLE');
+      c.restore();
+    c.lineWidth = 4;
+    c.strokeStyle = 'white';
+    c.stroke();
+    Engine.pause();
+  }
+};
+</script>
+
+</head>
+<body>
+
+<!-- The vertically centered horizontal strip, for drawing the horizontal frame border. -->
+<div id="h"></div>
+<!-- The horizontally centered vertical strip. -->
+<div id="v"></div>
+<!-- The centered canvas. -->
+<div id="c"><canvas id="game" width="800" height="600"></canvas></div>
+
+<!-- The start-up dialog. -->
+<div id="d" style="display: none">
+<p>
+  <strong>Heads-up:</strong> this page contains multimedia content;<br>
+  adjust your speaker volume!
+</p>
+<p>
+  Depends on some fairly new browser features. Make sure your<br>
+  browser is up-to-date! Tested with Firefox 3.5+ and Chrome 5+.
+</p>
+<p id="s">
+  <a href="javascript:start()">Continue</a>
+</p>
+</div>
+
+</body>
+</html>
