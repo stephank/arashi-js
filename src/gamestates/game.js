@@ -22,11 +22,12 @@ GameMachine = {
   flyInGrid: function() {
     Starfield.ride();
     grid.draw();
+
+    grid.distance -= C.flyInAdvance;
     if (grid.distance <= 0) {
       grid.distance = 0;
       Engine.transition('main');
     }
-    grid.distance -= C.flyInAdvance;
   },
 
   enter_main: function() {
