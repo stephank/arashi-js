@@ -15,6 +15,8 @@ To launch, simply open `arashi.html` in a browser.
 
 ArashiJS is licensed GNU GPL version 2. See the COPYING file for details.
 
+# Hacking
+
 ## Directory structure
 
 * `src` contains all the JavaScript source code.
@@ -23,7 +25,7 @@ ArashiJS is licensed GNU GPL version 2. See the COPYING file for details.
 * `util` contains some utilities used in conversion and by the `Makefile`.
 * `dist` contains distributables created by `make`.
 
-## Hacking
+## Code structure
 
 The game loop is found in `src/engine.js`. The engine basically keeps track of the game state, and
 calls the related handler method each frame. These methods in turn live in the source files
@@ -42,6 +44,8 @@ feature of this is that it is seedable. (This is necessary for playback of recor
 * The `src/grid.js` library contains the code for reading and drawing the level's grid, and
 includes definitions for levels converted from the original.
 
+## Build infrastructure
+
 A `Makefile` is included, which fulfills some optional development tasks:
 
 * `make lint` runs JSLint on all source files. Before each source file is processed, the file
@@ -54,3 +58,11 @@ work for your set-up.
 environment variables JAVA and YUICOMP if the defaults don't work for your set-up.
 
 * `make clean` is your run-off-the-mill cleaning target for the above two.
+
+## Canvas pecularities
+
+The HTML5 canvas has a fair amount of state variables. This is the place to document the
+pecularities of how ArashiJS deals with these variables.
+
+* When using the drawing state stack, always `restore` **before** a `stroke` or `fill` operation.
+* Always reset `globalAlpha` to 1.0 when you're done using it.

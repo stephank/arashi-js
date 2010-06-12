@@ -84,7 +84,6 @@ Engine.resume = function() {
 
 // Blank the entire screen
 Engine.blank = function() {
-  c.globalAlpha = 1.0;
   c.fillStyle = 'black';
   c.fillRect(0, 0, frame.w, frame.h);
 };

@@ -157,6 +157,8 @@ Grid.prototype.draw = function() {
   c.lineWidth = 1;
   c.strokeStyle = style;
   c.stroke();
+
+  c.globalAlpha = 1.0;
 };
 
 
