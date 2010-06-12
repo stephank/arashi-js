@@ -20,14 +20,16 @@ GameMachine = {
     grid.distance = C.flyInStart;
   },
   flyInGrid: function() {
-    Starfield.ride();
-    grid.draw();
-
-    grid.distance -= C.flyInAdvance;
-    if (grid.distance <= 0) {
-      grid.distance = 0;
+    if (grid.distance <= C.flyInAdvance) {
+      grid.setDistance(0);
       Engine.transition('main');
     }
+    else {
+      grid.setDistance(grid.distance - C.flyInAdvance);
+    }
+
+    Starfield.ride();
+    grid.draw();
   },
 
   enter_main: function() {

@@ -16,7 +16,7 @@ var Grid = function(info) {
   this.angles = info.angles;
   this.twist = [info.twist[0] * C.gridTwistFactor, info.twist[1] * C.gridTwistFactor];
 
-  // Calculate the coordinates.
+  // Calculate the front edge grid-screen coordinates, sans distance transformations.
   var coords = [],
       angle = 0, x = 0, y = 0, i, radians, // State
       xmin = 0, xmax = 0, ymin = 0, ymax = 0; // Used to keep track of boundaries.
@@ -69,24 +69,66 @@ var Grid = function(info) {
 
   // Store coordinates.
   this.coords = coords;
+  this.numLanes = this.coords.length - 1;
+
+  // Initialize.
+  this.color = [255, 255, 255];
+  this.scoords = [];
+  this.scoords[this.coords.length - 1] = null; // Initialize array size.
+  this.setDistance(0);
 };
 
-Grid.prototype = {
-  color: [255,255,255],
-  distance: 0
+// Apply canvas translations required before drawing grid-screen coordinates.
+Grid.prototype.applyCanvasTranslation = function() {
+  // Translate to the center of the screen.
+  c.translate(frame.w / 2, frame.h / 2);
+  // Scale to fit the grid neatly on the screen.
+  var scale = Math.min(frame.w / this.size[0], frame.h / this.size[1]);
+  c.scale(scale, scale);
+  // Translate with the grid twist, so that the origin becomes the point of convergence.
+  c.translate(this.twist[0], this.twist[1]);
 };
 
-Grid.prototype.draw = function() {
-  // Calculate screen coordinates for each grid corner.
-  // We simulate the Z-axis by reversing the below twist translation with a factor.
-  // Pretty simply, this 'pulls stuff away' from the point of convergence.
-  var frontDepthFactor = C.startDepth / (C.startDepth + this.distance),
-      backDepthFactor = C.startDepth / (C.endDepth + this.distance),
-      scoords = [], i, corner;
-  scoords[this.coords.length - 1] = null; // initialize array size
+// Find the width factor at the given depth.
+Grid.prototype.depthFactorAt = function(depth) {
+  return C.startDepth / (C.startDepth + depth + this.distance);
+};
+
+// Translate grid-lane coordinates to grid-screen coordinates.
+// The perspective used in Arashi cannot be reproduced with simple 2D canvas translations.
+// So anything that draws 'on' the grid has to manually translate coordinates using this method.
+Grid.prototype.translate = function(lane, depth) {
+  var laneIndex = Math.round(lane),
+      posFactor = lane + 0.5 - laneIndex;
+
+  // Find both corners belonging to this lane.
+  var cornerA = this.coords[laneIndex],
+      cornerB = this.coords[(laneIndex + 1) % this.coords.length];
+
+  // Calculate the horizontal position on the lane.
+  var posX = cornerA[0] + posFactor * (cornerB[0] - cornerA[0]),
+      posY = cornerA[1] + posFactor * (cornerB[1] - cornerA[1]);
+
+  // Transform by grid distance.
+  var depthFactor = this.depthFactorAt(depth);
+  return [
+    (posX - this.twist[0]) * depthFactor,
+    (posY - this.twist[1]) * depthFactor
+  ];
+};
+
+// Distance setter, which caches some drawing variables.
+Grid.prototype.setDistance = function(distance) {
+  this.distance = distance;
+
+  // Calculate grid-screen coordinates for each grid corner.
+  var frontDepthFactor = this.depthFactorAt(0),
+      backDepthFactor  = this.depthFactorAt(C.depth),
+      i, corner;
   for (i = 0; i < this.coords.length; i++) {
     corner = this.coords[i];
-    scoords[i] = {
+    this.scoords[i] = {
+      // Note that the twist factor here is negating what was done in #applyCanvasTranslation.
       sx: (corner[0] - this.twist[0]) * frontDepthFactor,
       sy: (corner[1] - this.twist[1]) * frontDepthFactor,
       ex: (corner[0] - this.twist[0]) * backDepthFactor,
@@ -95,65 +137,65 @@ Grid.prototype.draw = function() {
     };
   }
 
-  var style = 'rgb('+this.color[0]+','+this.color[1]+','+this.color[2]+')', alphaFactor;
+  // Calculate 'fog', (or the alpha channel value).
   if (this.distance < C.fogDepth) {
-    alphaFactor = 1.0;
+    this.alphaFactor = 1.0;
   }
   else {
-    alphaFactor = Math.max(0, 1 - (this.distance-C.startDepth) / (C.flyInStart-C.startDepth-1));
+    this.alphaFactor = Math.max(0,
+        1 - (this.distance - C.startDepth) / (C.flyInStart - C.startDepth - 1));
   }
+};
+
+Grid.prototype.draw = function() {
+  var style = 'rgb('+this.color[0]+','+this.color[1]+','+this.color[2]+')';
+  var i, corner;
 
   c.save();
-  // Translate to the center of the screen.
-  c.translate(frame.w / 2, frame.h / 2);
-  // Scale to fit the grid neatly on the screen.
-  var scale = Math.min(frame.w / this.size[0], frame.h / this.size[1]);
-  c.scale(scale, scale);
-  // Translate with the grid twist, so that the origin becomes the point of convergence.
-  c.translate(this.twist[0], this.twist[1]);
+  this.applyCanvasTranslation();
 
   // Fill the grid area
   c.beginPath();
-  c.moveTo(scoords[0].sx, scoords[0].sy);
-  for (i = 1; i < scoords.length; i++) {
-    corner = scoords[i];
+  c.moveTo(this.scoords[0].sx, this.scoords[0].sy);
+  for (i = 1; i < this.scoords.length; i++) {
+    corner = this.scoords[i];
     c.lineTo(corner.sx, corner.sy);
   }
   for (i -= 1; i >= 0; i -= 1) {
-    corner = scoords[i];
+    corner = this.scoords[i];
     c.lineTo(corner.ex, corner.ey);
   }
   c.closePath();
 
-  c.globalAlpha = 0.03 * alphaFactor;
+  c.globalAlpha = 0.03 * this.alphaFactor;
   c.fillStyle = style;
   c.fill();
 
   c.beginPath();
   // Draw lanes
-  for (i = 0; i < scoords.length; i++) {
-    corner = scoords[i];
+  for (i = 0; i < this.scoords.length; i++) {
+    corner = this.scoords[i];
     c.moveTo(corner.sx, corner.sy);
     c.lineTo(corner.ex, corner.ey);
   }
   // Draw front edge
-  c.moveTo(scoords[0].sx, scoords[0].sy);
-  for (i = 1; i < scoords.length; i++) {
-    corner = scoords[i];
+  c.moveTo(this.scoords[0].sx, this.scoords[0].sy);
+  for (i = 1; i < this.scoords.length; i++) {
+    corner = this.scoords[i];
     if (corner.close) { c.closePath(); break; }
     c.lineTo(corner.sx, corner.sy);
   }
   // Draw back edge
-  c.moveTo(scoords[0].ex, scoords[0].ey);
-  for (i = 1; i < scoords.length; i++) {
-    corner = scoords[i];
+  c.moveTo(this.scoords[0].ex, this.scoords[0].ey);
+  for (i = 1; i < this.scoords.length; i++) {
+    corner = this.scoords[i];
     if (corner.close) { c.closePath(); break; }
     c.lineTo(corner.ex, corner.ey);
   }
 
   c.restore();
 
-  c.globalAlpha = alphaFactor;
+  c.globalAlpha = this.alphaFactor;
   c.lineWidth = 1;
   c.strokeStyle = style;
   c.stroke();
