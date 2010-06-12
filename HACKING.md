@@ -1,10 +1,12 @@
 # Hacking the ArashiJS code
 
+Well, hello there! It's so nice to have you visit here. Please, do continue reading.
+
 ## Directory structure
 
 * `src` contains all the JavaScript source code.
 * `snd` contains the WAV PCM conversions of the original sounds.
-* `img` contains the SVG and PNG conversions of the original images.
+* `img` contains the SVG and PNG conversions of the original images. (unused)
 * `util` contains some utilities used in conversion and by the `Makefile`.
 * `dist` contains distributables created by `make`.
 
@@ -38,14 +40,15 @@ work for your set-up.
 
 * `make dist` creates the compressed JavaScript and CSS distributables under `dist/`. The file
 `util/dist.head.js` is concatenated to the input of the compressor. You can override the
-environment variables JAVA and YUICOMP if the defaults don't work for your set-up.
+environment variables JAVA, YUICOMP, HTMLCOMP and OGGENC if the defaults don't work for your
+set-up.
 
 * `make clean` is your run-off-the-mill cleaning target for the above two.
 
 ## Testing
 
-There is not fancy automated testing, but it is quite easy to test individual game components
-during development.
+There is no fancy automated testing, but it is quite easy to test individual game components during
+development.
 
 A file `testing.template.html` is included, which is basically a commented start-up page. To use
 it, make a copy of it called `testing.html`. The copy won't be tracked by version control, so you
