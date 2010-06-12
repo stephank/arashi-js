@@ -2,13 +2,13 @@ var
 
 GameMachine = {
   enter_start: function() {
-    this.grid = Grids.Circle16;
-    Starfield.color = this.grid.color = [0,0,255];
+    grid = Grids.Circle16;
+    Starfield.color = grid.color = [0,0,255];
     Engine.transition('flyInStars');
   },
 
   enter_flyInStars: function() {
-    setTimeout(function() { Starfield.twistFromGrid(GameMachine.grid); }, 1000);
+    setTimeout(function() { Starfield.twistFromGrid(); }, 1000);
     setTimeout(function() { Engine.transition('flyInGrid'); }, 3000);
   },
   flyInStars: function() {
@@ -17,16 +17,16 @@ GameMachine = {
   },
 
   enter_flyInGrid: function() {
-    this.grid.distance = C.flyInStart;
+    grid.distance = C.flyInStart;
   },
   flyInGrid: function() {
     Starfield.ride();
-    this.grid.draw();
-    if (this.grid.distance <= 0) {
-      this.grid.distance = 0;
+    grid.draw();
+    if (grid.distance <= 0) {
+      grid.distance = 0;
       Engine.transition('main');
     }
-    this.grid.distance -= C.flyInAdvance;
+    grid.distance -= C.flyInAdvance;
   },
 
   enter_main: function() {

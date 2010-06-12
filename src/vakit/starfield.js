@@ -92,7 +92,7 @@ Starfield.ride = function() {
 };
 
 // Adjust the targetTwist based on the grid settings
-Starfield.twistFromGrid = function(grid) {
+Starfield.twistFromGrid = function() {
   // Calculate the scale the grid will use...
   var scale = Math.min(frame.w / grid.size[0], frame.h / grid.size[1]);
   // ...so we can get to the screen coordinates of the twist target

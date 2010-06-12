@@ -11,6 +11,8 @@ var c = null;
 // Some frame parameters. (See engine.js.)
 var frame = null;
 
+// The active grid;
+var grid = null;
 
 // Radians per degree, used in conversion.
 Constants.radPerDeg = Math.PI / 180;
