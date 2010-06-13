@@ -109,8 +109,9 @@ Lightning.draw = function(start, end) {
 };
 
 // Returns true when the animation is finished.
-Lightning.animate = function() {
+Lightning.update = function() {
   if (this.flashIntensity <= 1 && this.drawStart >= frame.h) { return true; }
+  this.flashIntensity = Math.round(this.flashIntensity * 2 / 3);
 
   if (!this.lightningHit) {
     if (this.drawEnd < frame.h) {
@@ -125,17 +126,25 @@ Lightning.animate = function() {
     this.drawStart += this.drawSpeed;
   }
 
+  return false;
+};
+
+Lightning.paint = function() {
   var full = this.flashIntensity,
       half = Math.round(full / 2);
   c.fillStyle = 'rgb(' + half + ',' + half + ',' + full + ')';
   c.fillRect(0, 0, frame.w, frame.h);
-  this.flashIntensity = Math.round(full * 2 / 3);
 
-  c.beginPath();
-    this.draw(this.drawStart, this.drawEnd);
   c.lineWidth = 3;
   c.strokeStyle = 'white';
+  c.beginPath();
+    this.draw(this.drawStart, this.drawEnd);
   c.stroke();
+};
 
+// Convenience function, because we always pair #update + #paint any way.
+Lightning.animate = function() {
+  if (this.update()) { return true; }
+  this.paint();
   return false;
 };

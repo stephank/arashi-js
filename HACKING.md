@@ -63,5 +63,14 @@ or perhaps simply to skip the intro and jump right into a specific level.
 The HTML5 canvas has a fair amount of state variables. This is the place to document the
 pecularities of how ArashiJS deals with these variables.
 
-* When using the drawing state stack, always `restore` **before** a `stroke` or `fill` operation.
+* All `draw*` methods only ever draw paths. Other methods (usually called `paint`) will do an
+actual `stroke` or `fill` operation.
+
 * Always reset `globalAlpha` to 1.0 when you're done using it.
+
+* Always use stack methods (`save` and `restore`) and painting methods (`beginPath` and `stroke` or
+`fill`) in a block or hierarchy fashion. There should be no partial overlaps in their scope.
+
+* Indent the above like a block, too.
+
+* Set the stroke or fill parameters *before* starting a path.

@@ -18,12 +18,11 @@ Plasma.prototype.update = function() {
   }
 };
 
-Plasma.prototype.draw = function() {
+Plasma.prototype.paint = function() {
   var angle = this.depth * 63,
       i, dx, dy;
 
   c.save();
-    grid.screenTranslation();
     grid.laneTranslation(this.lane, this.depth)
 
     c.lineWidth = 0.02;

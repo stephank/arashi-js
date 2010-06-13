@@ -44,19 +44,19 @@ VectorLogo.prototype.animate = function() {
       break;
     case true:
       done = false;
-      c.beginPath();
-      SizzlingLine.draw(line[0], line[1], line[2], line[3],
-          1 + Math.pow(2, 8 - (line.timer / 2)), 3);
       c.strokeStyle = 'blue';
+      c.beginPath();
+        SizzlingLine.draw(line[0], line[1], line[2], line[3],
+            1 + Math.pow(2, 8 - (line.timer / 2)), 3);
       c.stroke();
       line.timer -= 1;
       if (line.timer === 0) { line.state = undefined; }
       break;
     case undefined:
-      c.beginPath();
-      c.moveTo(line[0], line[1]);
-      c.lineTo(line[2], line[3]);
       c.strokeStyle = 'yellow';
+      c.beginPath();
+        c.moveTo(line[0], line[1]);
+        c.lineTo(line[2], line[3]);
       c.stroke();
       break;
     }

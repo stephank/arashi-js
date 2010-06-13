@@ -29,7 +29,10 @@ GameMachine = {
     }
 
     Starfield.ride();
-    grid.draw();
+    c.save();
+      grid.screenTranslation();
+      grid.paint();
+    c.restore();
   },
 
   enter_main: function() {

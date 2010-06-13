@@ -144,15 +144,10 @@ Grid.prototype.setDistance = function(distance) {
   }
 };
 
-Grid.prototype.draw = function() {
-  var style = 'rgb('+this.color[0]+','+this.color[1]+','+this.color[2]+')';
+// Draw a polygon around the solid area of the grid.
+Grid.prototype.drawArea = function() {
   var i, corner;
 
-  c.save();
-  this.screenTranslation();
-
-  // Fill the grid area
-  c.beginPath();
   c.moveTo(this.scoords[0].sx, this.scoords[0].sy);
   for (i = 1; i < this.scoords.length; i++) {
     corner = this.scoords[i];
@@ -163,38 +158,52 @@ Grid.prototype.draw = function() {
     c.lineTo(corner.ex, corner.ey);
   }
   c.closePath();
+};
 
-  c.globalAlpha = 0.03 * this.alphaFactor;
-  c.fillStyle = style;
-  c.fill();
+// Draw the lane borders.
+Grid.prototype.drawLanes = function() {
+  var i, corner;
 
-  c.beginPath();
-  // Draw lanes
+  // Draw the borders between lanes.
   for (i = 0; i < this.scoords.length; i++) {
     corner = this.scoords[i];
     c.moveTo(corner.sx, corner.sy);
     c.lineTo(corner.ex, corner.ey);
   }
-  // Draw front edge
+
+  // Draw front edge all around.
   c.moveTo(this.scoords[0].sx, this.scoords[0].sy);
   for (i = 1; i < this.scoords.length; i++) {
     corner = this.scoords[i];
     if (corner.close) { c.closePath(); break; }
     c.lineTo(corner.sx, corner.sy);
   }
-  // Draw back edge
+
+  // Draw back edge.
   c.moveTo(this.scoords[0].ex, this.scoords[0].ey);
   for (i = 1; i < this.scoords.length; i++) {
     corner = this.scoords[i];
     if (corner.close) { c.closePath(); break; }
     c.lineTo(corner.ex, corner.ey);
   }
+};
 
-  c.restore();
+// Paint all of the grid.
+// The caller is responsible for applying the screen translation first.
+Grid.prototype.paint = function() {
+  var style = 'rgb('+this.color[0]+','+this.color[1]+','+this.color[2]+')';
+  c.fillStyle = style;
+  c.strokeStyle = style;
+  c.lineWidth = 0.01;
+
+  c.globalAlpha = 0.03 * this.alphaFactor;
+  c.beginPath();
+    this.drawArea();
+  c.fill();
 
   c.globalAlpha = this.alphaFactor;
-  c.lineWidth = 1;
-  c.strokeStyle = style;
+  c.beginPath();
+    this.drawLanes();
   c.stroke();
 
   c.globalAlpha = 1.0;

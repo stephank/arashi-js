@@ -103,14 +103,15 @@ Engine.render = function() {
   // Draw frame render time in ms
   if (window.arashi_devmode) {
     var d = new Date() - s;
-    c.beginPath();
-      c.save();
-        c.translate(0.5, 0.5); // Pixel align
-        c.scale(3,3); c.translate(1,1);
+    c.save();
+      c.translate(0.5, 0.5); // Pixel align
+      c.scale(3,3); c.translate(1,1);
+
+      c.lineWidth = 0.3;
+      c.strokeStyle = 'white';
+      c.beginPath();
         Dig7Segment.drawNumber(d);
-      c.restore();
-    c.lineWidth = 1;
-    c.strokeStyle = 'white';
-    c.stroke();
+      c.stroke();
+    c.restore();
   }
 };
