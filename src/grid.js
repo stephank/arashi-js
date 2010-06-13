@@ -79,7 +79,7 @@ var Grid = function(info) {
 };
 
 // Apply canvas translations required before drawing grid-screen coordinates.
-Grid.prototype.applyCanvasTranslation = function() {
+Grid.prototype.screenTranslation = function() {
   // Translate to the center of the screen.
   c.translate(frame.w / 2, frame.h / 2);
   // Scale to fit the grid neatly on the screen.
@@ -94,10 +94,9 @@ Grid.prototype.depthFactorAt = function(depth) {
   return C.startDepth / (C.startDepth + depth + this.distance);
 };
 
-// Translate grid-lane coordinates to grid-screen coordinates.
-// The perspective used in Arashi cannot be reproduced with simple 2D canvas translations.
-// So anything that draws 'on' the grid has to manually translate coordinates using this method.
-Grid.prototype.translate = function(lane, depth) {
+// Apply canvas translations required before drawing grid-lane coordinates.
+// This should be applied after the screen translation.
+Grid.prototype.laneTranslation = function(lane, depth) {
   var laneIndex = Math.round(lane),
       posFactor = lane + 0.5 - laneIndex;
 
@@ -109,12 +108,10 @@ Grid.prototype.translate = function(lane, depth) {
   var posX = cornerA[0] + posFactor * (cornerB[0] - cornerA[0]),
       posY = cornerA[1] + posFactor * (cornerB[1] - cornerA[1]);
 
-  // Transform by grid distance.
+  // Translate.
   var depthFactor = this.depthFactorAt(depth);
-  return [
-    (posX - this.twist[0]) * depthFactor,
-    (posY - this.twist[1]) * depthFactor
-  ];
+  c.scale(depthFactor, depthFactor);
+  c.translate(posX - this.twist[0], posY - this.twist[1]);
 };
 
 // Distance setter, which caches some drawing variables.
@@ -128,7 +125,7 @@ Grid.prototype.setDistance = function(distance) {
   for (i = 0; i < this.coords.length; i++) {
     corner = this.coords[i];
     this.scoords[i] = {
-      // Note that the twist factor here is negating what was done in #applyCanvasTranslation.
+      // Note that the twist factor here is negating what was done in #screenTranslation.
       sx: (corner[0] - this.twist[0]) * frontDepthFactor,
       sy: (corner[1] - this.twist[1]) * frontDepthFactor,
       ex: (corner[0] - this.twist[0]) * backDepthFactor,
@@ -152,7 +149,7 @@ Grid.prototype.draw = function() {
   var i, corner;
 
   c.save();
-  this.applyCanvasTranslation();
+  this.screenTranslation();
 
   // Fill the grid area
   c.beginPath();

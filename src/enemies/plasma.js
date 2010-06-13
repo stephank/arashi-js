@@ -19,13 +19,12 @@ Plasma.prototype.update = function() {
 };
 
 Plasma.prototype.draw = function() {
-  var pos = grid.translate(this.lane, this.depth),
-      angle = this.depth * 21 + 2 * Math.PI,
-      depthFactor = grid.depthFactorAt(this.depth),
+  var angle = this.depth * 21 + 2 * Math.PI,
       i, dx, dy;
 
   c.save();
-    grid.applyCanvasTranslation();
+    grid.screenTranslation();
+    grid.laneTranslation(this.lane, this.depth)
 
     c.lineWidth = 0.01;
     // FIXME
@@ -33,13 +32,13 @@ Plasma.prototype.draw = function() {
     c.fillStyle = 'white';
 
     c.beginPath();
-      c.moveTo(pos[0], pos[1]);
+      c.moveTo(0, 0);
       for (i = 0; i < 3; i++) {
         angle += Math.PI * 2 / 3;
-        dx = (Math.cos(angle) * depthFactor) / 5;
-        dy = (Math.sin(angle) * depthFactor) / 5;
-        c.lineTo(pos[0] + dx, pos[1] + dy);
-        c.fillRect(pos[0] - (dx / 3), pos[1] - (dy / 3), 0.02, 0.02);
+        dx = Math.cos(angle) / 5;
+        dy = Math.sin(angle) / 5;
+        c.lineTo(dx, dy);
+        c.fillRect(-(dx / 2), -(dy / 2), 0.02, 0.02);
       }
     c.stroke();
   c.restore();
