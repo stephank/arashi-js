@@ -23,7 +23,7 @@ Plasma.prototype.paint = function() {
       i, dx, dy;
 
   c.save();
-    grid.laneTranslation(this.lane, this.depth)
+    grid.laneTranslation(this.lane, this.depth);
 
     c.lineWidth = 0.02;
     // FIXME

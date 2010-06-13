@@ -22,8 +22,9 @@ Engine.start = function(initialMachine) {
   });
 
   // Allow a different starting machine in development
-  if (!initialMachine)
+  if (!initialMachine) {
     initialMachine = TitleMachine;
+  }
 
   // All systems, go!
   this.resume();
