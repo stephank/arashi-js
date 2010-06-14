@@ -1,3 +1,6 @@
+C.plasmaRotation = 21 / 120 * 2 * Math.PI;
+C.plasmaCorner = Math.PI * 2 / 3;
+
 var Plasma = function(lane) {
   this.lane = lane;
   this.depth = C.depth;
@@ -19,7 +22,7 @@ Plasma.prototype.update = function() {
 };
 
 Plasma.prototype.paint = function() {
-  var angle = this.depth * 63,
+  var angle = this.depth * C.plasmaRotation,
       i, dx, dy;
 
   c.save();
@@ -33,7 +36,7 @@ Plasma.prototype.paint = function() {
     c.beginPath();
       c.moveTo(0, 0);
       for (i = 0; i < 3; i++) {
-        angle += Math.PI * 2 / 3;
+        angle += C.plasmaCorner;
         dx = Math.cos(angle) / 6;
         dy = Math.sin(angle) / 6;
         c.lineTo(dx, dy);
