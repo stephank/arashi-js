@@ -8,7 +8,8 @@ HTMLCOMP ?= ../htmlcompressor.jar
 OGGENC ?= oggenc
 
 
-JSFILES := $(shell find src -iname '*.js' | grep -v '.lint.js')
+JSFILES := $(shell grep 'script src="src/' arashi.html | sed \
+    -e 's/^.\+\? src="//' -e 's/".\+//')
 WAVFILES := $(shell find snd -iname '*.wav')
 OGGFILES := $(WAVFILES:%.wav=%.ogg)
 DISTSOUNDS := $(WAVFILES:snd/%=dist/snd/%) $(OGGFILES:snd/%=dist/snd/%)
