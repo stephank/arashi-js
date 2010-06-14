@@ -4,6 +4,7 @@ GameMachine = {
   enter_start: function() {
     grid = Grids.Circle16;
     Starfield.color = grid.color = [0,0,255];
+    spikes.init();
     Engine.transition('flyInStars');
   },
 
@@ -32,6 +33,7 @@ GameMachine = {
     c.save();
       grid.screenTranslation();
       grid.paint();
+      spikes.paint();
     c.restore();
   },
 
