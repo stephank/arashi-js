@@ -87,6 +87,8 @@ Grid.prototype.screenTranslation = function() {
   c.scale(scale, scale);
   // Translate with the grid twist, so that the origin becomes the point of convergence.
   c.translate(this.twist[0], this.twist[1]);
+  // Apply the alpha factor to everything on the grid.
+  c.globalAlpha = this.alphaFactor;
 };
 
 // Find the width factor at the given depth.
@@ -206,7 +208,7 @@ Grid.prototype.paint = function() {
     this.drawLanes();
   c.stroke();
 
-  c.globalAlpha = 1.0;
+  // Assumption: the original +globalAlpha+ was already +alphaFactor+
 };
 
 
