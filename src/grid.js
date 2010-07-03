@@ -35,7 +35,8 @@ var Grid = function(info) {
     // Iterate around the grid.
     angle += this.angles[i];
     // Normalize the angle.
-    while (angle < 0) angle += 360; angle %= 360;
+    while (angle < 0) { angle += 360; }
+    angle %= 360;
     // Calculate the coordinates.
     radians = angle * C.radPerDeg;
     x += Math.cos(radians); y -= Math.sin(radians);
@@ -59,7 +60,7 @@ var Grid = function(info) {
 
   // Calculate the absolute angles of the CCW adjacent vertices.
   for (i = 0; i < adjacents.length; i++) {
-    var previous = (i != 0) ? i - 1 : adjacents.length - 1;
+    var previous = (i !== 0) ? i - 1 : adjacents.length - 1;
     adjacents[i][1] = (180 + adjacents[previous][0]) % 360;
   }
 

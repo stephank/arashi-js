@@ -8,7 +8,7 @@ var Pulsar = function(lane) {
 Pulsar.prototype.update = function() {
   // FIXME: Speed should be a level variable.
   this.depth -= 2;
-  if (this.depth < 0) { this.depth = 0 };
+  if (this.depth < 0) { this.depth = 0; }
 
   // FIXME: Flip and pulse.
 };
