@@ -17,32 +17,50 @@ var Grid = function(info) {
   this.twist = [info.twist[0] * C.gridTwistFactor, info.twist[1] * C.gridTwistFactor];
 
   // Calculate the front edge grid-screen coordinates, sans distance transformations.
-  var coords = [],
-      angle = 0, x = 0, y = 0, i, radians, // State
+  // Also calculate the size of the bounding box, and build an array of adjacents.
+  var coords = [], adjacents = [],
+      angle = 0, x = 0, y = 0, i, radians, // State.
       xmin = 0, xmax = 0, ymin = 0, ymax = 0; // Used to keep track of boundaries.
-  coords[this.angles.length] = null; // initialize array size
+  // Initialize array sizes.
+  coords[this.angles.length-1]  = null;
+  adjacents[this.angles.length] = null;
   for (i = 0; i < this.angles.length; i++) {
-    // Store current position
+    // Store current position.
     coords[i] = [x, y];
 
     // Keep track of the boundaries.
     xmin = Math.min(x, xmin); xmax = Math.max(x, xmax);
     ymin = Math.min(y, ymin); ymax = Math.max(y, ymax);
 
-    // Iterate
+    // Iterate around the grid.
     angle += this.angles[i];
+    // Normalize the angle.
+    while (angle < 0) angle += 360; angle %= 360;
+    // Calculate the coordinates.
     radians = angle * C.radPerDeg;
     x += Math.cos(radians); y -= Math.sin(radians);
+
+    // Store the absolute angle of the CW adjacent vertex.
+    // The CCW angle is added later, and simply set to null here.
+    adjacents[i] = [angle, null];
   }
   // Close the grid, or add the final lane.
   if (this.wraps) {
     // -1 signifies a closing segment, used in #draw
     coords[i] = coords[0].concat([-1]);
+    adjacents[i] = adjacents[0];
   }
   else {
     coords[i] = [x, y];
+    adjacents[i] = [null, null];
     xmin = Math.min(x, xmin); xmax = Math.max(x, xmax);
     ymin = Math.min(y, ymin); ymax = Math.max(y, ymax);
+  }
+
+  // Calculate the absolute angles of the CCW adjacent vertices.
+  for (i = 0; i < adjacents.length; i++) {
+    var previous = (i != 0) ? i - 1 : adjacents.length - 1;
+    adjacents[i][1] = (180 + adjacents[previous][0]) % 360;
   }
 
   // Add margins to the boundaries.
@@ -69,6 +87,7 @@ var Grid = function(info) {
 
   // Store coordinates.
   this.coords = coords;
+  this.adjacents = adjacents;
   this.numLanes = this.coords.length - 1;
 
   // Initialize.

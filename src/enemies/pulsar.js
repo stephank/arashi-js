@@ -1,7 +1,7 @@
 var Pulsar = function(lane) {
   this.lane = lane;
   this.depth = C.depth;
-  this.rotation = 0;
+  this.rotation = grid.adjacents[Math.round(lane)][0] * C.radPerDeg;
   this.power = 0;
 };
 
@@ -18,7 +18,7 @@ Pulsar.prototype.draw = function() {
     var ex = Math.cos(this.rotation) / 2;
     var ey = -Math.sin(this.rotation) / 2;
     var dx = ex - (this.power * ex) / 32;
-    var dy = ey - (this.power * ex) / 32;
+    var dy = ey - (this.power * ey) / 32;
     var bx = dx / 3;
     var by = dy / 3;
     var normx = (-dy*this.power) / 16;
