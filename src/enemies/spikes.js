@@ -23,7 +23,7 @@ Spike.prototype.draw = function() {
 Spike.prototype.paint = function() {
   c.lineWidth = 0.01;
   // FIXME
-  c.strokeStyle = 'white';
+  c.strokeStyle = 'yellow';
 
   c.beginPath();
     this.draw();

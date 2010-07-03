@@ -35,25 +35,40 @@ Spiker.prototype.paint = function() {
       i, dx, dy;
 
   c.save();
-    grid.laneTranslation(this.lane, this.depth);
 
-    c.lineWidth = 0.05;
+    c.lineWidth = 0.015;
     // FIXME
     c.strokeStyle = 'white';
 
-    // FIXME: Redraw the spike section up to the spiker in a brighter color.
-
+    // Brighten the spike section between the bottom and this spiker.
     c.beginPath();
-      dx = Math.cos(angle) / 6;
-      dy = Math.sin(angle) / 6;
-      c.moveTo(dx, dy);
-      for (i = 0; i < 4; i++) {
-        angle += C.spikerCorner;
+      c.save();
+        grid.laneTranslation(this.lane, this.depth);
+        c.moveTo(0, 0);
+      c.restore();
+
+      c.save();
+        grid.laneTranslation(this.lane, C.depth);
+        c.lineTo(0, 0);
+      c.restore();
+    c.stroke();
+
+    // The spike itself
+    c.beginPath();
+      c.save();
+        grid.laneTranslation(this.lane, this.depth);
         dx = Math.cos(angle) / 6;
         dy = Math.sin(angle) / 6;
-        c.lineTo(dx, dy);
-      }
+        c.moveTo(dx, dy);
+        for (i = 0; i < 4; i++) {
+          angle += C.spikerCorner;
+          dx = Math.cos(angle) / 6;
+          dy = Math.sin(angle) / 6;
+          c.lineTo(dx, dy);
+        }
+      c.restore();
       c.closePath();
     c.stroke();
+
   c.restore();
 };
